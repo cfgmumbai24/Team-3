@@ -44,6 +44,7 @@ model Product {
   imageURL              String?
   description           String?
   userId                String
+  color                 String?
   user                  User            @relation(fields: [userId], references: [id])
   category              ProductCategory
   approvedBySubAdmin    Boolean

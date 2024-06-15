@@ -30,5 +30,6 @@ export const typeDefs = `#graphql
         userId: String!
         user: User!
         category: ProductCategory!
+        color: String
     }
 `;

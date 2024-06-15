@@ -3,4 +3,5 @@ export const queries = `#graphql
     getCurrentLoggedInUser: User
     getProducts: [Product]
     getProductById(productId: String!): Product
+    getPresignedUrl( imageName: String!, imageType: String!): String
 `;

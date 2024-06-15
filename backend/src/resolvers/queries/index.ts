@@ -1,4 +1,15 @@
+import { GraphqlContext } from '../../interfaces';
 import UserService, { GetUserTokenPayload } from '../../services/User';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
+const s3Client = new S3Client({
+    region: process.env.AWS_REGION as string,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+    },
+});
 
 const queries = {
     getUserToken: async (_: any, payload: GetUserTokenPayload) => {
@@ -12,6 +23,30 @@ const queries = {
             return user;
         }
         throw new Error('User not found');
+    },
+    getPresignedUrl: async (
+        parent: any,
+        { imageType, imageName }: { imageType: string; imageName: string },
+        ctx: GraphqlContext,
+    ) => {
+        if (!ctx.user || !ctx.user.id) {
+            throw new Error('Not Authenticated');
+        }
+
+        const allowedImageTypes = ['jpeg', 'jpg', 'png', 'webp'];
+        if (!allowedImageTypes.includes(imageType)) {
+            throw new Error('Invalid image type');
+        }
+
+        const putObjectCommand = new PutObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+            Key: `uploads/${
+                ctx.user.id
+            }/products/${imageName}-${Date.now()}.${imageType}`,
+        });
+
+        const signedUrl = await getSignedUrl(s3Client, putObjectCommand);
+        return signedUrl;
     },
 };
 

@@ -5,5 +5,7 @@ export const typeDefs = `#graphql
         lastName: String
         email: String!
         profileImageURL: String
+        phoneNo: String
+        userRole: String
     }
 `;

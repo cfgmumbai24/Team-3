@@ -22,5 +22,14 @@ model User {
   password        String
   salt            String
 
+  phoneNo  String?
+  userRole UserRole
+
   @@map("users")
+}
+
+enum UserRole {
+  MASTER_ADMIN
+  SUB_ADMIN
+  CLUSTER_ADMIN
 }

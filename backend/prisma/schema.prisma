@@ -24,6 +24,7 @@ model User {
 
   phoneNo  String?
   userRole UserRole
+  Product  Product[]
 
   @@map("users")
 }
@@ -32,4 +33,27 @@ enum UserRole {
   MASTER_ADMIN
   SUB_ADMIN
   CLUSTER_ADMIN
+}
+
+model Product {
+  id          String          @id @default(uuid()) @map("_id")
+  name        String
+  SKU_ID      String          @unique
+  height      Float?
+  weight      Float?
+  quantity    Int?
+  imageURL    String?
+  description String?
+  userId      String
+  user        User            @relation(fields: [userId], references: [id])
+  category    ProductCategory
+}
+
+enum ProductCategory {
+  TerraCotta
+  Macrame
+  Moonj
+  BananaFiber
+  JuteBags
+  Other
 }

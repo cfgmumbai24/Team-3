@@ -1,5 +1,6 @@
 import UserService, { CreateUserPayload } from '../../services/User';
 import { prismaClient } from '../../lib/db';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum ProductCategory {
     TerraCotta = 'TerraCotta',
@@ -26,9 +27,12 @@ const mutations = {
             color: string;
             userId: string;
             category: ProductCategory;
-            quantity?: number;
         },
     ) => {
+        const UID = generateUID();
+        const SKU_COLOR = payload.color.slice(0, 2).toUpperCase();
+        const SKU_CATEGORY = payload.category.slice(0, 2).toUpperCase();
+        const SKU_ID = `${SKU_CATEGORY}_${SKU_COLOR}_${UID}`;
         const product = await prismaClient.product.create({
             data: {
                 name: payload.name,
@@ -37,13 +41,37 @@ const mutations = {
                 imageURL: payload.imageURL,
                 description: payload.description,
                 userId: payload.userId,
-                quantity: payload.quantity,
                 category: payload.category
                     ? payload.category
                     : ProductCategory.Other,
-                SKU_ID: 'TC_RND_001',
                 approvedBySubAdmin: false,
                 approvedByMasterAdmin: false,
+                SKU_ID,
+            },
+        });
+        return product;
+    },
+    updateProduct: async (
+        _: any,
+        payload: {
+            productId: string;
+            name?: string;
+            height?: number;
+            weight?: number;
+            imageURL?: string;
+            description?: string;
+        },
+    ) => {
+        const product = await prismaClient.product.update({
+            where: {
+                id: payload.productId,
+            },
+            data: {
+                name: payload.name,
+                height: payload.height,
+                weight: payload.weight,
+                imageURL: payload.imageURL,
+                description: payload.description,
             },
         });
         return product;
@@ -77,3 +105,8 @@ const mutations = {
 };
 
 export default mutations;
+
+function generateUID(): string {
+    const uuid = uuidv4().replace(/-/g, ''); // Remove hyphens from the UUID
+    return uuid.substring(0, 8); // Get the first 8 characters
+}

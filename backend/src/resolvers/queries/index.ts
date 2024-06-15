@@ -1,7 +1,9 @@
 import { GraphqlContext } from '../../interfaces';
+import { prismaClient } from '../../lib/db';
 import UserService, { GetUserTokenPayload } from '../../services/User';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { ProductCategory } from '../mutations';
 
 const s3Client = new S3Client({
     region: process.env.AWS_REGION as string,
@@ -47,6 +49,25 @@ const queries = {
 
         const signedUrl = await getSignedUrl(s3Client, putObjectCommand);
         return signedUrl;
+    },
+    getProductById: async (_: any, parameters: { productId: string }) => {
+        const product = await prismaClient.product.findUnique({
+            where: {
+                id: parameters.productId,
+            },
+        });
+        return product;
+    },
+    getProductsByCategory: async (
+        _: any,
+        parameters: { category: ProductCategory },
+    ) => {
+        const products = await prismaClient.product.findMany({
+            where: {
+                category: parameters.category,
+            },
+        });
+        return products;
     },
 };
 

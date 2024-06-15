@@ -5,6 +5,6 @@ export const mutations = `#graphql
     forgotPassword(email: String!): Boolean
     approvedBySubAdmin(productId: String!): Boolean
     approvedByMasterAdmin(productId: String!): Boolean
-    reduceProductInventory(productId: String!, quantity: Int!): Boolean
-    addProductInventory(productId: String!, quantity: Int!): Boolean
+    reduceProductInventory(SKU_ID: String!, quantity: Int!): Boolean
+    addProductInventory(SKU_ID: String!, quantity: Int!): Boolean
 `;

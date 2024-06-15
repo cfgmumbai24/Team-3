@@ -36,17 +36,19 @@ enum UserRole {
 }
 
 model Product {
-  id          String          @id @default(uuid()) @map("_id")
-  name        String
-  SKU_ID      String          @unique
-  height      Float?
-  weight      Float?
-  quantity    Int?
-  imageURL    String?
-  description String?
-  userId      String
-  user        User            @relation(fields: [userId], references: [id])
-  category    ProductCategory
+  id                    String          @id @default(uuid()) @map("_id")
+  name                  String
+  SKU_ID                String
+  height                Float?
+  weight                Float?
+  quantity              Int?
+  imageURL              String?
+  description           String?
+  userId                String
+  user                  User            @relation(fields: [userId], references: [id])
+  category              ProductCategory
+  approvedBySubAdmin    Boolean
+  approvedByMasterAdmin Boolean
 }
 
 enum ProductCategory {

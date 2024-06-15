@@ -42,6 +42,8 @@ const mutations = {
                     ? payload.category
                     : ProductCategory.Other,
                 SKU_ID: 'TC_RND_001',
+                approvedBySubAdmin: false,
+                approvedByMasterAdmin: false,
             },
         });
         return product;
@@ -49,6 +51,28 @@ const mutations = {
     forgotPassword: async (_: any, payload: { email: string }) => {
         const res = await UserService.forgotPassword(payload);
         return res;
+    },
+    approvedBySubAdmin: async (_: any, payload: { productId: string }) => {
+        const product = await prismaClient.product.update({
+            where: {
+                id: payload.productId,
+            },
+            data: {
+                approvedBySubAdmin: true,
+            },
+        });
+        return product.approvedBySubAdmin;
+    },
+    approvedByMasterAdmin: async (_: any, payload: { productId: string }) => {
+        const product = await prismaClient.product.update({
+            where: {
+                id: payload.productId,
+            },
+            data: {
+                approvedByMasterAdmin: true,
+            },
+        });
+        return product.approvedByMasterAdmin;
     },
 };
 

@@ -3,4 +3,5 @@ export const queries = `#graphql
     getCurrentLoggedInUser: User
     getProducts: [Product]
     getProductById(productId: String!): Product
+    getProductsByCategory(category: ProductCategory!): [Product]
 `;

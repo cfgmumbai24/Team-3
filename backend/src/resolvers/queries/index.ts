@@ -3,6 +3,7 @@ import { prismaClient } from '../../lib/db';
 import UserService, { GetUserTokenPayload } from '../../services/User';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { InventoryService } from '../../services/inventory';
 import { ProductCategory } from '../mutations';
 
 const s3Client = new S3Client({
@@ -68,6 +69,12 @@ const queries = {
             },
         });
         return products;
+    },
+    getInventoryBySKU: async (_: any, parameters: { SKU_ID: string }) => {
+        const inventory = await InventoryService.getInventoryBySKU(
+            parameters.SKU_ID,
+        );
+        return inventory?.quantity || -1;
     },
 };
 

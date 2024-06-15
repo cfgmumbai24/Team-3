@@ -1,6 +1,7 @@
 import UserService, { CreateUserPayload } from '../../services/User';
 import { prismaClient } from '../../lib/db';
 import { v4 as uuidv4 } from 'uuid';
+import { InventoryService } from '../../services/inventory';
 
 export enum ProductCategory {
     TerraCotta = 'TerraCotta',
@@ -27,6 +28,7 @@ const mutations = {
             color: string;
             userId: string;
             category: ProductCategory;
+            quantity?: number;
         },
     ) => {
         const UID = generateUID();
@@ -48,6 +50,11 @@ const mutations = {
                 approvedByMasterAdmin: false,
                 SKU_ID,
             },
+        });
+        InventoryService.createInventory({
+            SKU_ID,
+            quantity: payload.quantity ? payload.quantity : 0,
+            category: payload.category,
         });
         return product;
     },
@@ -101,6 +108,29 @@ const mutations = {
             },
         });
         return product.approvedByMasterAdmin;
+    },
+    reduceProductInventory: async (
+        _: any,
+        payload: { SKU_ID: string; quantity: number },
+    ) => {
+        const inventory = await InventoryService.updateInventory({
+            SKU_ID: payload.SKU_ID,
+            quantity: -payload.quantity,
+        });
+        if (inventory) {
+            return true;
+        }
+        return false;
+    },
+    addProductInventory: async (
+        _: any,
+        payload: { SKU_ID: string; quantity: number },
+    ) => {
+        await InventoryService.updateInventory({
+            SKU_ID: payload.SKU_ID,
+            quantity: payload.quantity,
+        });
+        return true;
     },
 };
 

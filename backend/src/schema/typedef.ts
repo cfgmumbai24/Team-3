@@ -25,7 +25,6 @@ export const typeDefs = `#graphql
         SKU_ID: String!
         height: Float
         weight: Float
-        quantity: Int
         imageURL: String
         description: String
         userId: String!

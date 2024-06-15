@@ -5,4 +5,5 @@ export const queries = `#graphql
     getProductById(productId: String!): Product
     getPresignedUrl( imageName: String!, imageType: String!): String
     getProductsByCategory(category: ProductCategory!): [Product]
+    getInventoryBySKU(SKU_ID: String!): Int
 `;

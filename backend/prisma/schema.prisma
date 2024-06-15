@@ -58,3 +58,9 @@ enum ProductCategory {
   JuteBags
   Other
 }
+
+model Inventory {
+  SKU_ID   String          @id @map("_id")
+  quantity Int
+  category ProductCategory
+}

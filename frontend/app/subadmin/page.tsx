@@ -1,21 +1,32 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { useState } from "react";
+import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface Product {
-  id: string
-  category: string
-  productId: string
-  imageUrl: string
+  id: string;
+  category: string;
+  productId: string;
+  imageUrl: string;
 }
 
-interface ChevronDownIconProps extends React.SVGProps<SVGSVGElement> {}
-
-const ChevronDownIcon: React.FC<ChevronDownIconProps> = (props) => {
+const ChevronDownIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
       {...props}
@@ -31,13 +42,13 @@ const ChevronDownIcon: React.FC<ChevronDownIconProps> = (props) => {
     >
       <path d="m6 9 6 6 6-6" />
     </svg>
-  )
-}
+  );
+};
 
 const Component: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [showImageModal, setShowImageModal] = useState<boolean>(false)
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showImageModal, setShowImageModal] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const products: Product[] = [
     {
@@ -70,26 +81,40 @@ const Component: React.FC = () => {
       productId: "C005",
       imageUrl: "/placeholder.svg",
     },
-  ]
+  ];
+
+  const serializedProducts = products.map((product, index) => ({
+    ...product,
+    id: `${index + 1}`,
+  }));
 
   const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category === selectedCategory)
-    : products
+    ? serializedProducts.filter((product) => product.category === selectedCategory)
+    : serializedProducts;
 
   return (
-    <div className="flex flex-col min-h-screen px-4 md:px-6 py-8">
-      <header className="py-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4" />
-          <div className="flex items-center gap-4">
+    <div className="flex flex-col min-h-screen px-4 md:px-6 py-8 border-4 border-blue-500">
+      <header className="py-4 flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-4">
+            Product Approval
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <div className="flex flex-col items-center">
+            <Link href="/subadmin/query_resolution">
+              <Button variant="outline" size="sm" className="text-xs mb-2">
+                query_resolution
+              </Button>
+            </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="bg-blue-200 text-blue-900">
                   Categories
                   <ChevronDownIcon className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[200px]">
+              <DropdownMenuContent className="w-[200px] bg-blue-100">
                 <DropdownMenuItem onSelect={() => setSelectedCategory("Terracotta ornaments and home decor")}>
                   Terracotta ornaments and home decor
                 </DropdownMenuItem>
@@ -110,15 +135,23 @@ const Component: React.FC = () => {
           </div>
         </div>
       </header>
-      <main className="flex-1 py-8">
-        <div className="container mx-auto">
+      <main className="flex-1 py-4 md:py-8">
+        <div className="container mx-auto max-w-[800px]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>SKU ID</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Product ID</TableHead>
-                <TableHead>Image</TableHead>
+                <TableHead className="text-blue-900 text-sm center md:text-base">
+                  Serial Number
+                </TableHead>
+                <TableHead className="text-blue-900 text-sm center md:text-base">
+                  Category
+                </TableHead>
+                <TableHead className="text-blue-900 text-sm md:text-base">
+                  Product ID
+                </TableHead>
+                <TableHead className="text-blue-900 text-sm md:text-base">
+                  Image
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -131,8 +164,8 @@ const Component: React.FC = () => {
                     <Button
                       variant="link"
                       onClick={() => {
-                        setSelectedImage(product.imageUrl)
-                        setShowImageModal(true)
+                        setSelectedImage(product.imageUrl);
+                        setShowImageModal(true);
                       }}
                     >
                       <img
@@ -152,7 +185,7 @@ const Component: React.FC = () => {
       </main>
       {showImageModal && selectedImage && (
         <Dialog open={showImageModal} onOpenChange={setShowImageModal}>
-          <DialogContent className="max-w-[50vw]">
+          <DialogContent className="max-w-[80vw]">
             <div className="flex flex-col items-center">
               <img
                 src={selectedImage}
@@ -165,20 +198,21 @@ const Component: React.FC = () => {
                 <Button variant="outline" className="mr-2">
                   Reject
                 </Button>
-                <Button>Accept</Button>
+                <Link href="/desired-path">
+                  <Button>Accept</Button>
+                </Link>
               </div>
             </div>
           </DialogContent>
         </Dialog>
       )}
-      <footer className="bg-gray-900 text-white py-4">
+      <footer className="bg-blue-900 text-white py-2">
         <div className="container mx-auto text-center">
           <p>&copy; 2023 My Ecommerce Site. All rights reserved.</p>
         </div>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Component
-export { ChevronDownIcon }
+export default Component;

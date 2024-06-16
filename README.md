@@ -4,6 +4,8 @@
 
 This is a comprehensive application designed to manage and streamline the process of buying and managing products. It integrates several user roles and leverages an AI model to classify local artisan products by their SKU_IDs. The system includes functionalities for raising queries, uploading product images, handling inventory management and handling approvals through various administrative roles.
 
+https://github.com/cfgmumbai24/Team-3/assets/78212328/bcbdb78c-c64c-4f5d-9c29-41a0f4c0f25e
+
 ## Tech Stack
 
 - **Frontend**: Next.js (for incremental static regeneration), Tailwind CSS

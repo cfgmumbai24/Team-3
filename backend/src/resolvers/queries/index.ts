@@ -15,6 +15,10 @@ const s3Client = new S3Client({
 });
 
 const queries = {
+    getProducts: async (_: any) => {
+        const products = await prismaClient.product.findMany();
+        return products;
+    },
     getUserToken: async (_: any, payload: GetUserTokenPayload) => {
         const res = await UserService.getUserToken(payload);
         return res;

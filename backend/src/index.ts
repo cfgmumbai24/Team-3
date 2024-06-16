@@ -3,12 +3,15 @@ import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import createApolloGraphqlServer from './graphql';
 import JWTService from './services/jwt';
+import cors from "cors";
 
 async function init() {
     const app = express();
     const PORT = process.env.PORT || 8000;
 
+    app.use(cors());
     app.use(bodyParser.json());
+    app.use(cors({}));
 
     app.get('/', (req, res) => {
         res.json({ message: 'Everything is working fine!' });

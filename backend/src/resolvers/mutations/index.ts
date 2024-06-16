@@ -43,6 +43,7 @@ const mutations = {
                 imageURL: payload.imageURL,
                 description: payload.description,
                 userId: payload.userId,
+                color: payload.color,
                 category: payload.category
                     ? payload.category
                     : ProductCategory.Other,

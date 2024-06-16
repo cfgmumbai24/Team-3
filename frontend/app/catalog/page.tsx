@@ -11,6 +11,7 @@ import Image from 'next/image';
 import client from '@/components/apollo_client';
 import { gql } from '@apollo/client';
 import { useState, useEffect } from 'react';
+import useWishListHook from '@/components/wishlist_hook';
 
 export default function Component() {
     const [catalogs, setCatalogs] = useState<Array<any>>([]);
@@ -106,6 +107,7 @@ function ChevronDownIcon(props: any) {
 }
 
 function Catalog({ data }: { data: { imageURL: string; name: string } }) {
+    const { addToWishList } = useWishListHook();
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <Image
@@ -117,7 +119,12 @@ function Catalog({ data }: { data: { imageURL: string; name: string } }) {
             />
             <div className="p-4">
                 <h3 className="text-lg font-medium mb-2">{data.name}</h3>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => addToWishList(data)}
+                >
                     Add to Wishlist
                 </Button>
             </div>
